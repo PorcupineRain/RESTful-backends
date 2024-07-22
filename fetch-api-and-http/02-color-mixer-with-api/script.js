@@ -46,23 +46,9 @@ button.addEventListener("click", function(){
         }
     })
     .then((data) => {
-        let red = data.rgb.r;
-        let green = data.rgb.g;
-        let blue = data.rgb.b;
-        let hexR = parseInt(red).toString(16);
-  let hexG = parseInt(green).toString(16);
-  let hexB = parseInt(blue).toString(16);
-  if (hexR.length === 1) {
-    hexR = "0" + hexR;
-  }
-  if (hexG.length === 1) {
-    hexG = "0" + hexG;
-  }
-  if (hexB.length === 1) {
-    hexB = "0" + hexB;
-  }
-  p.innerText = "#" + hexR + hexG + hexB;
-  body.style.background = "rgba(" + red + "," + green + "," + blue + ")";
-   
+        slider1.value = data.rgb.r;
+        slider2.value = data.rgb.g;
+        slider3.value = data.rgb.b;
     })
+    changeBackground();
 })
