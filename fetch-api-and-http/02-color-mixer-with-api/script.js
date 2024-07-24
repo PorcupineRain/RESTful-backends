@@ -46,6 +46,7 @@ button.addEventListener("click", async function(){
         changeBackground();
 
 
+//first solution, shorter alternive above
 
     /*fetch("https://dummy-apis.netlify.app/api/color")
     .then((response) =>{
