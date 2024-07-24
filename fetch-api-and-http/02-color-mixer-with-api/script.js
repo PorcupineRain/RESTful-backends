@@ -23,6 +23,7 @@ function changeBackground() {
     }
     p.innerText = "#" + hexR + hexG + hexB;
     body.style.background = "rgba(" + red + "," + green + "," + blue + ")";
+  console.log("change background")
   }
 
 slider1.addEventListener("input", function () {
@@ -35,8 +36,18 @@ slider3.addEventListener("input", function () {
   changeBackground();
 });
 
-button.addEventListener("click", function(){
-    fetch("https://dummy-apis.netlify.app/api/color")
+button.addEventListener("click", async function(){
+  const response = await fetch("https://dummy-apis.netlify.app/api/color");
+  const data = await response.json();
+  slider1.value = data.rgb.r;
+        slider2.value = data.rgb.g;
+        slider3.value = data.rgb.b;
+        console.log("callback")
+        changeBackground();
+
+
+
+    /*fetch("https://dummy-apis.netlify.app/api/color")
     .then((response) =>{
         if(response.ok){
             return response.json();
@@ -46,6 +57,7 @@ button.addEventListener("click", function(){
         slider1.value = data.rgb.r;
         slider2.value = data.rgb.g;
         slider3.value = data.rgb.b;
-    })
-    changeBackground();
+        console.log("callback")
+        changeBackground();
+    })*/
 })
