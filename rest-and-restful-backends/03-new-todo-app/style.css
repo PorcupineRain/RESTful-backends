@@ -1,0 +1,145 @@
+:root {
+  --background-body: hsl(0, 0%, 13%);
+  --text-regular: azure;
+  --checked: aquamarine;
+}
+
+body {
+  line-height: 1.5;
+  font-family: Verdana, monospace;
+  background-color: var(--background-body);
+  color: var(--text-regular);
+  margin: 5%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 650px;
+}
+h1 {
+  font-weight: 200;
+  text-transform: uppercase;
+}
+
+input[type="text"] {
+  width: 40rem;
+  max-width: 60%;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: solid;
+  border-width: 0.1rem;
+  background-color: azure;
+  margin-block: 0.5em;
+}
+
+.filter {
+  line-height: 1.1;
+  font-size: 1.2rem;
+}
+.form-group {
+  display: grid;
+  place-content: left;
+  grid-template-columns: 1em auto;
+  gap: 0.5em;
+  margin-block: 0.5em;
+}
+
+input[type="radio"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--background-body);
+  font: inherit;
+  margin: 0;
+  color: var(--text-regular);
+  width: 1.15em;
+  height: 1.15em;
+  border: 0.15em solid var(--text-regular);
+  border-radius: 50%;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+
+input[type="radio"]::before {
+  content: "";
+  width: 0.65em;
+  height: 0.65em;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--checked);
+}
+input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+button {
+  width: 12rem;
+  max-width: 29.5%;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: solid;
+  border-width: 0.1rem;
+  cursor: pointer;
+  background-color: aquamarine;
+  margin-block: 0.5em;
+}
+
+input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background-color: var(--background-body);
+  margin-inline: 0.5em;
+  font: inherit;
+  color: var(--text-regular);
+  width: 2.15em;
+  height: 2.15em;
+  border: 0.15em solid var(--text-regular);
+  border-radius: 0.2em;
+  transform: translateY(-0.075em);
+  display: grid;
+  place-content: center;
+}
+input[type="checkbox"]::before {
+  content: "";
+  width: 0.85em;
+  height: 0.85em;
+  transform: scale(0);
+  transition: 120ms transform ease-in-out;
+  box-shadow: inset 1em 1em var(--checked);
+  transform-origin: bottom left;
+  clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+}
+
+input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+input[type="checkbox"]:focus {
+  outline: max(2px, 0.15em) solid var(--checked);
+  outline-offset: max(2px 0.15em);
+}
+
+li {
+  display: flex;
+  flex-direction: row;
+}
+
+@media screen and (min-width: 800px) {
+  body {
+    width: auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  body {
+    width: auto;
+    min-height: auto;
+  }
+  input[type="text"] {
+    width: 60%;
+  }
+  button {
+    min-width: fit-content;
+  }
+}

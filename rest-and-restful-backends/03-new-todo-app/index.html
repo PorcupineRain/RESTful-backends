@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="https://unpkg.com/modern-normalize@2.0.0/modern-normalize.css" />
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>todo App</title>
+</head>
+
+<body>
+    <main>
+        <h1>Do it.</h1>
+        <div class="filter">
+            <p>Filter Todos:</p>
+            <div class="form-group"><input id="filterNone" type="radio" name="filter"><label for="filterNone"
+                    aria-label="filter none" class="radio-control">none</label></div>
+            <div class="form-group"><input id="filterDone" type="radio" name="filter"><label for="filterDone"
+                    aria-label="filter done" class="radio-control">done</label></div>
+            <div class="form-group"><input id="filterOpen" type="radio" name="filter"> <label for="filterOpen"
+                    aria-label="filter open" class="radio-control">open</label></div>
+        </div>
+
+        <form id="inputForm">
+            <label aria-label="input new todo"><input type="text" name="newTodo" id="toDoInput"></label>
+            <button id="addButton" type="submit">Add Todo</button>
+            <button id="clearButton" type="button">Clear</button>
+            <button id="removeDone" type="button">Remove Done Todos</button>
+        </form>
+
+
+        <ul id="list">
+        </ul>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
