@@ -1,10 +1,6 @@
 let state = {
   currentFilter: "filterNone",
-  todos: [
-    { description: "Learn HTML", id: "learnhtml", done: true },
-    { description: "Learn CSS", id: "learncss", done: true },
-    { description: "Learn JavaScript", id: "learnjavascipt", done: false },
-  ],
+  todos: [],
 };
 
 let json = localStorage.getItem("listState");
@@ -20,6 +16,7 @@ async function getTodos() {
 
   state.todos = todos;
   renderTodos();
+  saveState();
 }
 
 getTodos();
@@ -69,8 +66,9 @@ const addBtn = document.querySelector("#addButton");
 const input = document.querySelector("#toDoInput");
 const inputForm = document.querySelector("#inputForm");
 
-inputForm.addEventListener("submit", function (event) {
+inputForm.addEventListener("submit", async function (event) {
   event.preventDefault();
+  console.log(event);
   input.value = input.value.trimEnd();
   const isDuplicate = state.todos.some(
     (todo) => input.value.toLowerCase() === todo.description.toLowerCase()
@@ -85,8 +83,8 @@ inputForm.addEventListener("submit", function (event) {
       description: input.value,
       done: false,
     };
-    state.todos.push(todo);
-    postToApi(todo);
+    const newTodoWithId = await postToApi(todo);
+    state.todos.push(newTodoWithId);
     input.value = "";
     renderTodos();
     saveState();
@@ -147,10 +145,8 @@ async function postToApi(todo) {
     body: JSON.stringify(todo),
   });
   const newTodo = await response.json();
-
   console.log({ newTodo });
-
-  return todo;
+  return newTodo;
 }
 
 async function putDoneToApi(todo) {
@@ -164,11 +160,6 @@ async function putDoneToApi(todo) {
       done: todo.done,
     }),
   });
-  const newTodo = await response.json();
-
-  console.log({ newTodo });
-
-  return todo;
 }
 
 async function clearApi() {
