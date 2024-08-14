@@ -67,6 +67,8 @@ h2 {
 
 .contact-info {
   margin: 0.6rem;
+  display: grid;
+  grid-template-rows: 4rem 3rem 2.5rem auto;
 }
 
 .contact-job {
