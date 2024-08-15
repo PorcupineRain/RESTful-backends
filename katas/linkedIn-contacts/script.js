@@ -12,25 +12,39 @@ const collection = document.querySelector("ul");
 
 let pendingAmount = 0;
 
+let json = localStorage.getItem("listState");
+if (json !== null) {
+  pendingAmount = JSON.parse(json);
+}
+showPendingInvitations();
+
+function saveState() {
+  json = JSON.stringify(pendingAmount);
+  localStorage.setItem("listState", json);
+}
+
+function showPendingInvitations() {
+  if (pendingAmount === 1) {
+    pendingInvitations.innerText = pendingAmount + " Pending Invitation";
+  } else if (pendingAmount === 0) {
+    pendingInvitations.innerText = "No Pending Invitations";
+  } else {
+    pendingInvitations.innerText = pendingAmount + " Pending Invitations";
+  }
+}
+
 connectBtns.forEach(function (i) {
   i.addEventListener("click", function () {
     if (i.innerText === "Connect") {
       i.innerText = "Pending";
       pendingAmount++;
-
-      if (pendingAmount === 1) {
-        pendingInvitations.innerText = pendingAmount + " Pending Invitation";
-      } else {
-        pendingInvitations.innerText = pendingAmount + " Pending Invitations";
-      }
+      saveState();
+      showPendingInvitations();
     } else {
       i.innerText = "Connect";
       pendingAmount--;
-      if (pendingAmount === 1) {
-        pendingInvitations.innerText = pendingAmount + " Pending Invitation";
-      } else {
-        pendingInvitations.innerText = pendingAmount + " Pending Invitations";
-      }
+      saveState();
+      showPendingInvitations();
     }
   });
 });

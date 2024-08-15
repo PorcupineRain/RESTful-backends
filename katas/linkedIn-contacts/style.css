@@ -58,7 +58,6 @@ ul {
   text-align: center;
   overflow: hidden;
   display: grid;
-  transition: 1.5s ease-in-out;
 }
 .background-image {
   width: 300px;
