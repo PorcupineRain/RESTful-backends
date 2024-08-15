@@ -1,26 +1,45 @@
 const removeBtns = document.querySelectorAll(".btn-close");
 const connectBtns = document.querySelectorAll(".btn-connect");
 const pendingInvitations = document.querySelector(".pending-invitations");
-const removeBtn1 = document.querySelector(".btn-close");
 const contentCards = document.querySelectorAll("li");
 const collection = document.querySelector("ul");
-// const name = document.querySelector(".contact-name");
-// const picture = document.querySelector(".contact-picture");
-// const background = document.querySelector(".background-image");
-// const job = document.querySelector(".contact-job");
-// const connections = document.querySelector(".mutual-connections");
 
 let pendingAmount = 0;
+let pendingCollection = [
+  "Connect",
+  "Connect",
+  "Connect",
+  "Connect",
+  "Connect",
+  "Connect",
+  "Connect",
+  "Connect",
+];
 
-let json = localStorage.getItem("listState");
+let json = localStorage.getItem("invitationState");
 if (json !== null) {
   pendingAmount = JSON.parse(json);
 }
+
+json = localStorage.getItem("buttonStatus");
+if (json !== null) {
+  pendingCollection = JSON.parse(json);
+}
+
 showPendingInvitations();
+setButtons();
 
 function saveState() {
   json = JSON.stringify(pendingAmount);
-  localStorage.setItem("listState", json);
+  localStorage.setItem("invitationState", json);
+  json = JSON.stringify(pendingCollection);
+  localStorage.setItem("buttonStatus", json);
+}
+
+function setButtons() {
+  for (let i = 0; i < pendingCollection.length; i++) {
+    connectBtns[i].innerText = pendingCollection[i];
+  }
 }
 
 function showPendingInvitations() {
@@ -33,28 +52,23 @@ function showPendingInvitations() {
   }
 }
 
-connectBtns.forEach(function (i) {
-  i.addEventListener("click", function () {
-    if (i.innerText === "Connect") {
-      i.innerText = "Pending";
+for (let i = 0; i < connectBtns.length; i++) {
+  connectBtns[i].addEventListener("click", function () {
+    if (connectBtns[i].innerText === "Connect") {
+      connectBtns[i].innerText = "Pending";
+      pendingCollection[i] = "Pending";
       pendingAmount++;
       saveState();
       showPendingInvitations();
     } else {
-      i.innerText = "Connect";
+      connectBtns[i].innerText = "Connect";
+      pendingCollection[i] = "Connect";
       pendingAmount--;
       saveState();
       showPendingInvitations();
     }
   });
-});
-
-// removeBtns.forEach(function (i) {
-//   i.addEventListener("click", function () {
-//     console.log(contentCards.i);
-//     i.parentNode.parentNode.parentNode.remove();
-//   });
-// });
+}
 
 removeBtns.forEach(function (i) {
   i.addEventListener("click", function () {
@@ -93,14 +107,3 @@ removeBtns.forEach(function (i) {
     getContactInfo();
   });
 });
-
-//function to load API Content
-// async function getContactInfo() {
-//   const contactResponse = await fetch(
-//     "https://dummy-apis.netlify.app/api/contact-suggestions?count=1"
-//   );
-//   const contactInfo = await contactResponse.json();
-//   console.log(contactInfo[0].title);
-// }
-
-// getContactInfo();
