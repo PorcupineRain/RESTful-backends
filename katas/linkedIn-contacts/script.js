@@ -1,170 +1,154 @@
-function generateCards() {
+let pendingInvitations = document.querySelector(".pending-invitations");
+
+let state = {
+  pendingAmount: 0,
+  contacts: [],
+  pendingStates: [],
+};
+
+loadState();
+
+async function generateCards() {
   for (let i = 0; i < 8; i++) {
-    async function getContactInfo() {
-      const contactResponse = await fetch(
-        "https://dummy-apis.netlify.app/api/contact-suggestions?count=1"
-      );
-      const contactInfo = await contactResponse.json();
-      let firstname = contactInfo[0].name.first;
-      let lastname = contactInfo[0].name.last;
-      let title = contactInfo[0].title;
-      let picture = contactInfo[0].picture;
-      let connections = contactInfo[0].mutualConnections;
-      let background = contactInfo[0].backgoundImage;
+    let contact = await getContactInfo();
+    generateCard(contact, "Connect");
 
-      let cardLi = document.createElement("li");
-      let article = document.createElement("article");
-      let header = document.createElement("header");
-      let closeBtn = document.createElement("button");
-      let buttonIcon = document.createElement("i");
-      let div = document.createElement("div");
-      let img = document.createElement("img");
-      let h2 = document.createElement("h2");
-      let jobP = document.createElement("p");
-      let mutualP = document.createElement("p");
-      let newButton = document.createElement("button");
+    state.contacts.push(contact);
+    state.pendingStates.push("Connect");
+  }
+  saveState();
+}
 
-      article.classList.add("contact-card");
-      header.classList.add("background-image");
-      closeBtn.classList.add("btn-close");
-      buttonIcon.classList.add("fa-solid", "fa-circle-xmark");
-      img.classList.add("contact-picture");
-      div.classList.add("contact-info");
-      h2.classList.add("contact-name");
-      jobP.classList.add("contact-job");
-      mutualP.classList.add("mutual-connections");
-      newButton.classList.add("btn-connect");
+function generateCard(contact, pendingState) {
+  let cardLi = document.createElement("li");
+  let article = document.createElement("article");
+  let header = document.createElement("header");
+  let closeBtn = document.createElement("button");
+  let buttonIcon = document.createElement("i");
+  let div = document.createElement("div");
+  let img = document.createElement("img");
+  let h2 = document.createElement("h2");
+  let jobP = document.createElement("p");
+  let mutualP = document.createElement("p");
+  let newButton = document.createElement("button");
 
-      img.src = picture;
-      h2.innerText = firstname + " " + lastname;
-      jobP.innerText = title;
-      mutualP.innerText = connections + " mutual connections";
-      newButton.innerText = "Connect";
+  newButton.contact = contact;
+  closeBtn.connectButton = newButton;
+  closeBtn.contact = contact;
 
-      list.appendChild(cardLi);
-      cardLi.appendChild(article);
-      article.appendChild(header);
-      article.appendChild(div);
-      header.appendChild(closeBtn);
-      closeBtn.appendChild(buttonIcon);
-      header.appendChild(img);
-      div.appendChild(h2);
-      div.appendChild(jobP);
-      div.appendChild(mutualP);
-      div.appendChild(newButton);
-    }
-    getContactInfo();
+  newButton.addEventListener("click", changeConnectionStatus);
+  closeBtn.addEventListener("click", replaceCard);
+
+  article.classList.add("contact-card");
+  header.classList.add("background-image");
+  closeBtn.classList.add("btn-close");
+  buttonIcon.classList.add("fa-solid", "fa-circle-xmark");
+  img.classList.add("contact-picture");
+  div.classList.add("contact-info");
+  h2.classList.add("contact-name");
+  jobP.classList.add("contact-job");
+  mutualP.classList.add("mutual-connections");
+  newButton.classList.add("btn-connect");
+
+  img.src = contact.picture;
+  h2.innerText = contact.name.first + " " + contact.name.last;
+  jobP.innerText = contact.title;
+
+  let connectionText = "connections";
+  if (contact.mutualConnections == 1) {
+    connectionText = "connection";
+  }
+  mutualP.innerText = contact.mutualConnections + " mutual " + connectionText;
+
+  newButton.innerText = pendingState;
+
+  list.appendChild(cardLi);
+  cardLi.appendChild(article);
+  article.appendChild(header);
+  article.appendChild(div);
+  header.appendChild(closeBtn);
+  closeBtn.appendChild(buttonIcon);
+  header.appendChild(img);
+  div.appendChild(h2);
+  div.appendChild(jobP);
+  div.appendChild(mutualP);
+  div.appendChild(newButton);
+}
+
+async function getContactInfo() {
+  const contactResponse = await fetch(
+    "https://dummy-apis.netlify.app/api/contact-suggestions?count=1"
+  );
+  const contactInfo = await contactResponse.json();
+  return contactInfo[0];
+}
+
+function showPendingInvitations() {
+  if (state.pendingAmount === 1) {
+    pendingInvitations.innerText = state.pendingAmount + " Pending Invitation";
+  } else if (state.pendingAmount === 0) {
+    pendingInvitations.innerText = "No Pending Invitations";
+  } else {
+    pendingInvitations.innerText = state.pendingAmount + " Pending Invitations";
   }
 }
-generateCards();
 
-// let pendingInvitations = document.querySelector(".pending-invitations");
-// let pendingAmount = 0;
+function changeConnectionStatus() {
+  if (this.innerText === "Connect") {
+    this.innerText = "Pending";
+    state.pendingAmount++;
+  } else {
+    this.innerText = "Connect";
+    state.pendingAmount--;
+  }
 
-// function showPendingInvitations() {
-//   if (pendingAmount === 1) {
-//     pendingInvitations.innerText = pendingAmount + " Pending Invitation";
-//   } else if (pendingAmount === 0) {
-//     pendingInvitations.innerText = "No Pending Invitations";
-//   } else {
-//     pendingInvitations.innerText = pendingAmount + " Pending Invitations";
-//   }
-// }
+  let cardIndex = state.contacts.findIndex(function (item) {
+    return item === this;
+  }, this.contact);
 
-// let removeBtns = document.querySelectorAll(".btn-close");
-// let connectBtns = document.querySelectorAll(".btn-connect");
-// let contentCards = document.querySelectorAll("li");
-// let collection = document.querySelector("ul");
+  state.pendingStates[cardIndex] = this.innerText;
+  showPendingInvitations();
+  saveState();
+}
 
-// let pendingCollection = [
-//   "Connect",
-//   "Connect",
-//   "Connect",
-//   "Connect",
-//   "Connect",
-//   "Connect",
-//   "Connect",
-//   "Connect",
-// ];
+async function replaceCard() {
+  if (this.connectButton.innerText === "Pending") {
+    state.pendingAmount--;
+  }
+  showPendingInvitations();
 
-// let json = localStorage.getItem("invitationState");
-// if (json !== null) {
-//   pendingAmount = JSON.parse(json);
-// }
+  let cardIndex = state.contacts.findIndex(function (item) {
+    return item === this;
+  }, this.contact);
 
-// json = localStorage.getItem("buttonStatus");
-// if (json !== null) {
-//   pendingCollection = JSON.parse(json);
-// }
+  state.contacts.splice(cardIndex, 1);
+  state.pendingStates.splice(cardIndex, 1);
 
-// showPendingInvitations();
-// setButtons();
+  let listElement = this.parentNode.parentNode.parentNode;
+  listElement.remove();
+  let contact = await getContactInfo();
+  generateCard(contact, "Connect");
+  state.contacts.push(contact);
+  state.pendingStates.push("Connect");
 
-// function saveState() {
-//   json = JSON.stringify(pendingAmount);
-//   localStorage.setItem("invitationState", json);
-//   json = JSON.stringify(pendingCollection);
-//   localStorage.setItem("buttonStatus", json);
-// }
+  saveState();
+}
 
-// function setButtons() {
-//   for (let i = 0; i < pendingCollection.length; i++) {
-//     connectBtns[i].innerText = pendingCollection[i];
-//   }
-// }
+function saveState() {
+  let json = JSON.stringify(state);
+  localStorage.setItem("appState", json);
+}
 
-// for (let i = 0; i < connectBtns.length; i++) {
-//   connectBtns[i].addEventListener("click", function () {
-//     if (connectBtns[i].innerText === "Connect") {
-//       connectBtns[i].innerText = "Pending";
-//       // pendingCollection[i] = "Pending";
-//       pendingAmount++;
-//       // saveState();
-//       showPendingInvitations();
-//     } else {
-//       connectBtns[i].innerText = "Connect";
-//       // pendingCollection[i] = "Connect";
-//       pendingAmount--;
-//       // saveState();
-//       showPendingInvitations();
-//     }
-//   });
-// }
-
-// removeBtns.forEach(function (i) {
-//   i.addEventListener("click", function () {
-//     let replacedCard = i.parentNode.parentNode.parentNode;
-//     replacedCard.remove();
-//     console.log(replacedCard);
-
-//     async function getContactInfo() {
-//       const contactResponse = await fetch(
-//         "https://dummy-apis.netlify.app/api/contact-suggestions?count=1"
-//       );
-//       const contactInfo = await contactResponse.json();
-//       let firstname = contactInfo[0].name.first;
-//       let lastname = contactInfo[0].name.last;
-//       let title = contactInfo[0].title;
-//       let picture = contactInfo[0].picture;
-//       let connections = contactInfo[0].mutualConnections;
-//       let background = contactInfo[0].backgoundImage;
-
-//       replacedCard.firstElementChild.firstElementChild.lastElementChild.src =
-//         picture;
-//       replacedCard.lastElementChild.lastElementChild.firstElementChild.innerText =
-//         firstname + " " + lastname;
-//       replacedCard.lastElementChild.lastElementChild.firstElementChild.nextElementSibling.innerText =
-//         title;
-//       if (connections === 1) {
-//         replacedCard.lastElementChild.lastElementChild.firstElementChild.nextElementSibling.nextElementSibling.innerText =
-//           connections + " mutual connection";
-//       } else {
-//         replacedCard.lastElementChild.lastElementChild.firstElementChild.nextElementSibling.nextElementSibling.innerText =
-//           connections + " mutual connections";
-//       }
-
-//       collection.append(replacedCard);
-//     }
-//     getContactInfo();
-//   });
-// });
+function loadState() {
+  let json = localStorage.getItem("appState");
+  if (json != null) {
+    state = JSON.parse(json);
+    state.pendingAmount = state.pendingAmount;
+    for (let i = 0; i < state.contacts.length; i++) {
+      generateCard(state.contacts[i], state.pendingStates[i]);
+    }
+  } else {
+    generateCards();
+  }
+  showPendingInvitations();
+}
