@@ -143,7 +143,6 @@ function loadState() {
   let json = localStorage.getItem("appState");
   if (json != null) {
     state = JSON.parse(json);
-    state.pendingAmount = state.pendingAmount;
     for (let i = 0; i < state.contacts.length; i++) {
       generateCard(state.contacts[i], state.pendingStates[i]);
     }
